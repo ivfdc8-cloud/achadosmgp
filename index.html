@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SinisterBOT - Automação Afiliados</title>
+    
+    <!-- PWA & App Celular Config -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#05030A">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SinisterBOT">
+    <link rel="apple-touch-icon" href="icon.svg">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="dashboard-layout">
+        
+        <!-- Barra de Opções Superior -->
+        <header class="app-topbar glass-panel">
+            <div class="topbar-left">
+                <div class="logo">
+                    <span class="logo-icon">🔮</span>
+                    <h1>Sinister<span>BOT</span></h1>
+                </div>
+            </div>
+            
+            <div class="topbar-right">
+                <!-- Botão Pílula do WhatsApp -->
+                <button id="toggle-wa-bar" class="options-pill-btn">
+                    <span id="wa-status-dot" class="dot offline"></span>
+                    <span id="wa-status-text">WhatsApp</span>
+                </button>
+
+                <!-- Botão 3 Barrinhas (Menu Hambúrguer ☰) -->
+                <button id="hamburger-btn" class="hamburger-btn" aria-label="Abrir Menu de Opções">
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                    <span class="hamburger-bar"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Menu Principal de Opções (Aberto pelas 3 Barrinhas ☰) -->
+        <div id="main-menu-drawer" class="options-drawer glass-panel hidden">
+            <div class="drawer-header">
+                <h3>⚙️ Menu de Opções</h3>
+                <button id="close-menu-btn" class="close-btn">✖</button>
+            </div>
+            
+            <div class="menu-sections-grid">
+                <!-- Seção 1: WhatsApp -->
+                <div class="menu-card">
+                    <h4>📲 Conexão WhatsApp</h4>
+                    <div class="status-indicator" style="margin-top: 10px;">
+                        <span id="wa-status-dot-drawer" class="dot offline"></span>
+                        <span id="wa-status-text-drawer">Desconectado</span>
+                    </div>
+                    
+                    <button id="btn-generate-qr" class="btn primary-btn full-width" style="margin-top: 12px;">
+                        📲 Conectar / Gerar QR Code
+                    </button>
+
+                    <div id="qr-container" class="qr-box hidden">
+                        <p id="qr-instruction">Escaneie com o WhatsApp:</p>
+                        <div id="qr-loading" class="hidden" style="padding: 20px 0;">
+                            <div class="spinner" style="width: 32px; height: 32px; margin: 0 auto 10px;"></div>
+                            <p style="color: #666; font-size: 0.8rem;">Gerando QR Code...</p>
+                        </div>
+                        <img id="wa-qr" src="" alt="QR Code WhatsApp" class="hidden">
+                        <p class="qr-help" style="color: #666; font-size: 0.75rem; margin-top: 8px;">No celular: WhatsApp > Aparelhos Conectados > Conectar aparelho</p>
+                        <button id="refresh-qr-btn" class="btn secondary-btn small-btn full-width" style="margin-top: 8px;">🔄 Atualizar QR</button>
+                    </div>
+
+                    <div id="wa-server-alert" class="hidden" style="margin-top: 10px; padding: 10px; background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger-color); border-radius: 8px; font-size: 0.8rem; color: #fca5a5;">
+                        ⚠️ <strong>Servidor local offline!</strong><br>
+                        Execute <code>npm start</code> no terminal para iniciar o WhatsApp.
+                    </div>
+                </div>
+
+                <!-- Seção 2: Templates & IA -->
+                <div class="menu-card">
+                    <h4>🎨 Templates & IA</h4>
+                    <div class="input-group" style="margin-top: 10px;">
+                        <label for="template-selector">Template de Mensagem</label>
+                        <select id="template-selector" class="custom-select">
+                            <option value="random">🎲 Escolher Aleatório</option>
+                            <option value="ia">✨ Criar com IA (Gemini)</option>
+                            <option value="flash">🔥 Oferta Flash</option>
+                            <option value="achado">🎯 Achado do Dia</option>
+                            <option value="queima">🚨 Queima de Estoque</option>
+                            <option value="simples">🛒 Direto ao Ponto</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" style="margin-top: 12px;">
+                        <label for="gemini-api-key">🤖 Chave de API do Gemini (IA)</label>
+                        <input type="password" id="gemini-api-key" class="custom-select" style="cursor: text;" placeholder="Sua Chave do Google Gemini" autocomplete="off">
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Salva com segurança no seu dispositivo.</p>
+                    </div>
+                </div>
+
+                <!-- Seção 3: Instalar como App no Celular -->
+                <div class="menu-card install-app-card">
+                    <h4>📱 Instalar como App no Celular</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 6px 0 12px;">
+                        Adicione o SinisterBOT na Tela de Início do seu Android ou iPhone para usar como aplicativo!
+                    </p>
+                    <button id="pwa-install-btn" class="btn secondary-btn full-width hidden">📥 Instalar Aplicativo</button>
+                    <p id="pwa-help-text" style="font-size: 0.8rem; color: var(--primary-hover);">
+                        💡 No navegador do celular: clique no menu de 3 pontos do Chrome e escolha <strong>"Adicionar à Tela de Início"</strong> (ou Compartilhar > Tela de Início no iPhone).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área Principal -->
+        <main class="main-content">
+            
+            <!-- Seção Principal: Colar Link Afiliado -->
+            <section class="input-section glass-panel">
+                <div class="section-header">
+                    <span class="store-badge ml inline-badge">Mercado Livre</span>
+                    <span class="store-badge shopee inline-badge">Shopee</span>
+                    <h3 style="display: inline-block;">Link de Afiliado</h3>
+                </div>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin: 8px 0 16px;">Cole seu link de afiliado abaixo. Ele será mantido exatamente como enviado.</p>
+                <div class="input-row">
+                    <input type="url" id="product-url" placeholder="Cole o link afiliado (ex: https://meli.la/... ou https://shope.ee/...)" autocomplete="off">
+                    <button id="search-btn" class="btn primary-btn pulse-btn">BUSCAR DADOS 🔍</button>
+                </div>
+                
+                <!-- Estados de Loading / Erro -->
+                <div id="loading-state" class="loading-container hidden">
+                    <div class="spinner"></div>
+                    <p id="loading-text">Analisando link da loja...</p>
+                </div>
+                
+                <div id="error-state" class="error-container hidden">
+                    <p id="error-text">Erro ao processar. Preencha manualmente.</p>
+                </div>
+            </section>
+
+            <!-- Seção de Edição e Disparo -->
+            <section id="customize-section" class="customize-section glass-panel hidden">
+                <div class="customize-grid">
+                    
+                    <!-- Coluna Esquerda: Produto -->
+                    <div class="product-col">
+                        <div class="product-image-container">
+                            <img id="preview-img" src="" alt="Produto">
+                            <div id="store-badge" class="store-badge hidden">ML</div>
+                        </div>
+                        <div id="preview-name" class="product-name-preview">Nome do Produto...</div>
+                    </div>
+                    
+                    <!-- Coluna Direita: Editor e Disparo -->
+                    <div class="editor-col">
+                        <div class="price-row">
+                            <div class="input-group">
+                                <label for="old-price">De R$ (Opcional)</label>
+                                <input type="number" id="old-price" step="0.01" placeholder="99.99">
+                            </div>
+                            <div class="input-group">
+                                <label for="new-price">Por R$ (Opcional)</label>
+                                <input type="number" id="new-price" step="0.01" placeholder="69.99">
+                            </div>
+                        </div>
+                        
+                        <div class="input-group flex-grow">
+                            <label for="final-text">Pré-visualização da Mensagem</label>
+                            <textarea id="final-text"></textarea>
+                        </div>
+
+                        <div class="dispatch-area">
+                            <div class="input-group">
+                                <label for="wa-group-selector">Destino do Envio</label>
+                                <select id="wa-group-selector" class="custom-select" disabled>
+                                    <option value="">Aguardando conexão com WhatsApp...</option>
+                                </select>
+                            </div>
+                            <button id="send-wa-btn" class="btn success-btn full-width" disabled>DISPARAR AGORA 🚀</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Register Service Worker (PWA) -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+        });
+      }
+    </script>
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
